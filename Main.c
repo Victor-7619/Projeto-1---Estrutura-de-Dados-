@@ -1,11 +1,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include"listLibr.h"   
+#include<locale.h>
+#include"listLibr.h"
 
 void InserirNovaSolicitacao(Lista *p)
 {
-    int code,existe;
+    int code;
     char entrada[100];
     No *novo = (No*)malloc(sizeof(No));
     novo->prox = NULL;
@@ -13,20 +14,24 @@ void InserirNovaSolicitacao(Lista *p)
     do
     {
         printf("codigo de solicitação: ");
-        scanf("%d",&code);
-        getchar();
+        fgets(entrada,sizeof(entrada),stdin);
+        entrada[strcspn(entrada, "\n")] = '\0';
 
-        existe = VerCod(p,code);
-        
-        if(existe)
+        if(strlen(entrada) != 4)
         {
-            printf("Codigo de solicitação já cadastrado.");
-            system("pause");
-            system("cls");
+            printf("\nDigite um código de 4 digitos.");
         }
-    }while(existe);
+        else
+        {
+            if(VerCod(p,entrada))
+            {
+                printf("\nCodigo de solicitação já cadastrado.");
+            }
+        }
+        pause();
+    }while(VerCod(p,entrada) || strlen(entrada) != 4);
 
-    novo->CodSol = code;
+    strcpy(novo->CodSol, entrada);
 
     do
     {
@@ -35,8 +40,9 @@ void InserirNovaSolicitacao(Lista *p)
 
         if(strlen(entrada) > 7)
         {
-            printf("Digite no maximo 20 caracteres!\n");
+            printf("\nDigite no maximo 20 caracteres!\n");
         }
+        pause();
     }while(strlen(entrada) > 7);
 
     entrada[strcspn(entrada, "\n")] = '\0';
@@ -49,8 +55,9 @@ void InserirNovaSolicitacao(Lista *p)
 
         if(strlen(entrada) > 21)
         {
-            printf("Digite no maximo 6 caracteres!\n");
+            printf("\nDigite no maximo 6 caracteres!\n");
         }
+        pause();
     }while(strlen(entrada) > 21);
 
     entrada[strcspn(entrada, "\n")] = '\0';
@@ -58,15 +65,15 @@ void InserirNovaSolicitacao(Lista *p)
 
     do
     {
-        printf("\nDigite o periodo de manutenção do equipamento: ");
+        printf("Digite o periodo de manutenção do equipamento: ");
         scanf("%d",&novo->Period);
+        getchar();
 
         if(novo->Period<1 || novo->Period>20)
         {
-            printf("\n\nPeriodo incorreto.");
-            system("pause");
-            system("cls");
+            printf("\nPeriodo incorreto.");
         }
+        pause();
     }while(novo->Period<1 || novo->Period>20);
 
     if(novo->Period>7)
@@ -84,18 +91,169 @@ void InserirNovaSolicitacao(Lista *p)
     {
         novo->Priori = 1;
     }
+    int escolha = -1;
+    do
+    {
+        printf("-------Nova solicitação-------\n\n");
+        printf("Código da solicitação: %s\n", novo->CodSol);
+        printf("Código do equipamento:   %s\n", novo->CodEqu);
+        printf("Nome do equipamento:      %s\n", novo->NomEqu);
+        printf("Prioridade:               %d\n", novo->Priori);
+        printf("Periodo de manutenção:  %d dias\n\n", novo->Period);
+        printf("-------------------------------");
+        printf("\n\n--Menu--");
+        printf("\n1- Inserir solicitação");
+        printf("\n2- Editar solicitação");
+        printf("\n3 - excluir solicitação");
+        printf("\n\nResposta: ");
+        scanf("%d",&escolha);
 
-    //Printar info do no para o usuario confirmar os dados
+        if(escolha<1 && escolha >3)
+           {
+                printf("\n--Escolha inválida--");
+                pause();
+           }
+    }while(escolha<1 && escolha >3);
 
-    insereLista(p,novo);
+    switch(escolha)
+    {
+    case 1:
+        insereLista(p,novo);
+        printf("\nSolicitação cadastrada com sucesso.");
+        pause();
+        break;
+    case 3:
+        free(novo);
+        printf("\nsolicitação cancelada.");
+        pause();
+        break;
+    }
 }
+void RemoverSolicitacao(Lista *p)
+{
+    int verifica = 0;
+    char entrada[6];
 
+    do
+    {
+        imprimeSolicita(p);
+
+        printf("\n\nDigite o código da solicitação a ser encerrada(1 para retornar ao menu): ");
+        fgets(entrada,sizeof(entrada),stdin);
+        entrada[strcspn(entrada, "\n")] = '\0';
+
+        if (strcmp(entrada, "1") == 0)
+        {
+            printf("\nRetornando ao menu.");
+            verifica = 1;
+        }
+        else
+        {
+            if(strlen(entrada) == 4)
+            {
+                if(removeLista(p,entrada))
+                {
+                    printf("\nSolicitação encerrada com sucesso.");
+                    verifica = 1;
+                }
+                else
+                {
+                    printf("codigo de solicitação inválido ou inexistente.");
+                }
+            }
+            else
+            {
+                printf("codigo de solicitação inválido ou inexistente.");
+            }
+        }
+        pause();
+    }while(verifica == 0);
+}
+void consultaSolicitacao(Lista *p)
+{
+    int verifica = 0;
+    char entrada[6];
+
+    do
+    {
+        imprimeSolicita(p);
+
+        printf("\n\nDigite o código da solicitação a ser consultada (1 para retornar ao menu): ");
+        fgets(entrada,sizeof(entrada),stdin);
+        entrada[strcspn(entrada, "\n")] = '\0';
+
+        if (strcmp(entrada, "1") == 0)
+        {
+            printf("\nRetornando ao menu.");
+            verifica = 1;
+        }
+        else
+        {
+            if(strlen(entrada) == 4)
+            {
+                if(imprimeLista(p,entrada))
+                {
+                    verifica = 1;
+                }
+                else
+                {
+                    printf("codigo de solicitação inválido ou inexistente.");
+                }
+            }
+            else
+            {
+                printf("codigo de solicitação inválido ou inexistente.");
+            }
+        }
+        pause();
+    }while(verifica == 0);
+}
+void menu(Lista *p)
+{
+    int escolha = -1;
+    do
+    {
+        printf("----Gerenciador de Manutenção de Equipamentos----");
+        printf("\n\n1- Insira uma nova solicitação");
+        printf("\n2- Remova uma solicitação");
+        printf("\n3- Consulte uma solicitação");
+        printf("\n0- sair");
+        printf("\n\n------------------------------------------------");
+        printf("\nOpção escolhida: ");
+        scanf("%d",&escolha);
+        getchar();
+
+        switch(escolha)
+        {
+            case 0:
+                printf("Encerrando programa.");
+                break;
+            case 1:
+                pause();
+                InserirNovaSolicitacao(p);
+                break;
+            case 2:
+                pause();
+                RemoverSolicitacao(p);
+                break;
+            case 3:
+                pause();
+                consultaSolicitacao(p);
+                break;
+            default:
+                escolha = -1;
+                printf("\nEscolha inválida.");
+                break;
+        }
+    }while(escolha != 0);
+
+}
 int main()
 {
+    setlocale(LC_ALL, "");
     Lista *p = criaLista();
 
-    InserirNovaSolicitacao(p);
-    ImprimeLista(p);
+    menu(p);
 
     return 0;
 }

@@ -4,7 +4,7 @@
 // STRUCT'S
 typedef struct no
 {
-        int CodSol;
+        char CodSol[100];
         char CodEqu[7];
         char NomEqu[21];
         int Priori;
@@ -54,6 +54,12 @@ Lista* liberaLista(Lista* L)
 
 // COMANDOS PARA INSERIR NA LISTA
 // Auxiliares
+void pause()
+{
+    printf("\n\n");
+    system("pause");
+    system("cls");
+}
 int confereTam(No* antigo)
 {
     int cont = 0;
@@ -82,23 +88,44 @@ No *auxInsere(No *antigo,No *novo)
     novo->prox = aux2;
     return antigo;
 }
-int VerCod(Lista *p, int n)
+No *auxRemove(No *antigo, char entrada[],int *verifica)
+{
+    No *novo = NULL,*aux = antigo;
+    while(aux != NULL && strcmp(aux->CodSol,entrada) != 0)
+    {
+        novo = aux;
+        aux = aux -> prox;
+    }
+    if(novo == NULL)
+    {
+        novo = aux -> prox;
+        free(aux);
+        *verifica = 1;
+        return novo;
+    }
+    if(aux != NULL)
+    {
+        if(strcmp(aux->CodSol,entrada) == 0)
+           {
+               novo -> prox = aux -> prox;
+               free(aux);
+               *verifica = 1;
+               return antigo;
+           }
+    }
+    return antigo;
+}
+int VerCod(Lista *p, char n[])
 {
     No *aux = p->inicio;
 
-    if(p->inicio != NULL)
+    while(aux != NULL)
     {
-        while(aux != NULL)
+        if( strcmp(aux->CodSol,n) == 0)
         {
-            if( n == aux->CodSol)
-            {
-                return 1;
-            }
-            else
-            {
-                aux = aux->prox;
-            }
+            return 1;
         }
+        aux = aux->prox;
     }
     return 0;
 }
@@ -178,17 +205,53 @@ void insereLista(Lista *p, No *novo)
 {
     p->inicio = auxInsere(p->inicio,novo);
 }
-void ImprimeLista(Lista *L)
+int removeLista(Lista *p, char entrada[])
 {
-    No *aux;
+    int verifica = 0;
+    p->inicio = auxRemove(p->inicio,entrada,&verifica);
 
-    for(aux = L->inicio; aux != NULL; aux = aux->prox)
+    return verifica;
+}
+int imprimeLista(Lista *p,char entrada[])
+{
+    No *aux = p->inicio;
+
+    while(aux!=NULL && strcmp(aux -> CodSol,entrada) != 0)
     {
-        printf("%d\n", aux->CodSol);
-        printf("%s\n", aux->CodEqu);
-        printf("%s\n", aux->NomEqu);
-        printf("%d\n", aux->Priori);
-        printf("%d\n", aux->Period);
+        aux = aux -> prox;
+    }
+    if(aux != NULL)
+    {
+        if(strcmp(aux -> CodSol,entrada) == 0)
+        {
+            printf("----------solicitação----------\n\n");
+            printf("Código da solicitação: %s\n", aux->CodSol);
+            printf("Código do equipamento:   %s\n", aux->CodEqu);
+            printf("Nome do equipamento:      %s\n", aux->NomEqu);
+            printf("Prioridade:               %d\n", aux->Priori);
+            printf("Periodo de manutenção:  %d dias\n\n", aux->Period);
+            printf("--------------------------------");
+            return 1;
+        }
+    }
+    return 0;
+
+}
+void imprimeSolicita(Lista *p)
+{
+    No *aux = p->inicio;
+    if(aux == NULL)
+    {
+        printf("\nNenhuma solicitação em aberto.");
+        pause();
+    }
+    else
+    {
+        printf("\nSolicitações em aberto: ");
+        for(int i = 1; aux != NULL; i++, aux = aux->prox)
+        {
+            printf("\n%d - %s",i,aux->CodSol);
+        }
     }
 }
 /*void insereInicioLista(Lista* velho, int valor)
