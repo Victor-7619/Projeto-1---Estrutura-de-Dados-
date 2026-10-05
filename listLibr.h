@@ -237,23 +237,198 @@ int imprimeLista(Lista *p,char entrada[])
     return 0;
 
 }
-void imprimeSolicita(Lista *p)
+int imprimeSolicita(Lista *p)
 {
     No *aux = p->inicio;
     if(aux == NULL)
     {
         printf("\nNenhuma solicitação em aberto.");
+        return 0;
+    }
+    printf("\nSolicitações em aberto: ");
+    for(int i = 1; aux != NULL; i++, aux = aux->prox)
+    {
+        printf("\n%d - %s",i,aux->CodSol);
+    }
+    return 1;
+}
+void editaInfo(Lista *p,No *novo)
+{
+    verifica = 0;
+    do
+    {
+        do
+        {
+            printf("\nQual valor deseja editar?");
+            printf("\n1- Código da solicitação");
+            printf("\n2- Código do equipamento");
+            printf("\n3- Nome do equipamento");
+            printf("\n4- Prioridade da solicitação");
+            printf("\n5- Periodo da solicitação");
+            printf("\n0- Retornar");
+            scanf("%d",&escolha);
+
+            if(escolha<0 && escolha>5)
+            {
+                printf("\n--Escolha inválida--");
+
+            }
+            pause();
+        }while(escolha<0 && escolha>5);
+
+        switch(escolha)
+        {
+            case 1:
+                insereCodSol(p,novo);
+                printf("\nCodigo de solicitação editado.");
+                break;
+
+            case 2:
+                insereCodEqu(p,novo);
+                printf("\nCódigo de equipamento editado.");
+                break;
+
+            case 3:
+                insereNomEqu(p,novo);
+                printf("\nNome do equipamento editado");
+                break;
+
+            case 4:
+                inserePriori(p,novo);
+                break;
+
+            case 5:
+                inserePeriod(p,novo);
+                printf("Periodo de manutenção editado.");
+                break;
+
+            case 0:
+                verifica = 1;
+                break;
+        }
         pause();
+    }while(verifica == 0);
+}
+
+//Inserir infos
+void insereCodSol(Lista *p, No *novo)
+{
+    char entrada[100];
+    do
+    {
+        printf("codigo de solicitação: ");
+        fgets(entrada,sizeof(entrada),stdin);
+        entrada[strcspn(entrada, "\n")] = '\0';
+
+        if(strlen(entrada) != 4)
+        {
+            printf("\nDigite um código de 4 digitos.");
+        }
+        else
+        {
+            if(VerCod(p,entrada))
+            {
+                printf("\nCodigo de solicitação já cadastrado.");
+            }
+        }
+        pause();
+    }while(VerCod(p,entrada) || strlen(entrada) != 4);
+
+    strcpy(novo->CodSol, entrada);
+}
+void insereCodEqu(Lista *p, No *novo)
+{
+    char entrada[100];
+    do
+    {
+        printf("Digite o Código do Equipamento: ");
+        fgets(entrada,sizeof(entrada),stdin);
+
+        if(strlen(entrada) > 7)
+        {
+            printf("\nDigite no maximo 20 caracteres!\n");
+        }
+        pause();
+    }while(strlen(entrada) > 7);
+
+    entrada[strcspn(entrada, "\n")] = '\0';
+    strcpy(novo->CodEqu, entrada);
+}
+void insereNomEqu(Lista *p,No *novo)
+{
+    char entrada[100];
+    do
+    {
+        printf("Digite o Nome do equipamento: ");
+        fgets(entrada,sizeof(entrada),stdin);
+
+        if(strlen(entrada) > 21)
+        {
+            printf("\nDigite no maximo 6 caracteres!\n");
+        }
+        pause();
+    }while(strlen(entrada) > 21);
+
+    entrada[strcspn(entrada, "\n")] = '\0';
+    strcpy(novo->NomEqu, entrada);
+}
+void inserePeriod(Lista *p,No *novo)
+{
+    do
+    {
+        printf("Digite o periodo de manutenção do equipamento: ");
+        scanf("%d",&novo->Period);
+        getchar();
+
+        if(novo->Period<1 || novo->Period>20)
+        {
+            printf("\nPeriodo incorreto.");
+        }
+        pause();
+    }while(novo->Period<1 || novo->Period>20);
+
+    if(novo->Period>7)
+    {
+        if(novo->Period>15)
+        {
+            novo->Priori = 3;
+        }
+        else
+        {
+            novo->Priori = 2;
+        }
     }
     else
     {
-        printf("\nSolicitações em aberto: ");
-        for(int i = 1; aux != NULL; i++, aux = aux->prox)
-        {
-            printf("\n%d - %s",i,aux->CodSol);
-        }
+        novo->Priori = 1;
     }
 }
+void inserePriori(Lista *p, No *novo)
+{
+    do
+    {
+        printf("\nPrioridade de manutenção: ");
+        scanf("%d",&novo->priori);
+    }while(novo->priori < 1 && novo->priori > 3);
+
+    switch(novo->priori)
+    {
+        case 1:
+            printf("\nDigite o novo Periodo de prioridade 1 (1 a 7 dias): ");
+            scanf("%d",&novo->Period);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 /*void insereInicioLista(Lista* velho, int valor)
 {
     velho->inicio = auxInsere(velho->inicio,valor);
