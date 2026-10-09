@@ -158,6 +158,47 @@ void consultaSolicitacao(Lista *p)
         pause();
     }while(verifica == 0);
 }
+void alteraPeriodOrPriori(Lista *p)
+{
+    int escolha = -1;
+    do
+    {
+
+        do
+        {
+            printf("\n------------Qual deseja alterar?------------");
+            printf("\n\n1- Prioridade");
+            printf("\n2- Periodo");
+            printf("\n0- Sair");
+            printf("\n\n------------------------------------------");
+            printf("\nOpção escolhida: ");
+            scanf("%d",&escolha);
+            getchar();
+            if(escolha<0 || escolha >2)
+            {
+                printf("\n--Escolha inválida--");
+                pause();
+            }
+        }while(escolha<0 || escolha >2);
+
+        switch(escolha)
+        {
+            case 1:
+                inserePriori(p,novo);
+                printf("\nPrioridade editada.");
+                pause();
+                break;
+            case 2:
+                inserePeriod(p,novo);
+                printf("\nPeriodo de manutenção editado.");
+                pause();
+                break;
+            case 0:
+                pause();
+                break;
+        }
+    }while(escolha != 0);
+}
 void menu(Lista *p)
 {
     int escolha = -1;
@@ -169,18 +210,19 @@ void menu(Lista *p)
             printf("\n\n1- Insira uma nova solicitação");
             printf("\n2- Remova uma solicitação");
             printf("\n3- Consulte uma solicitação");
+            printf(" \n4- Altere a prioridade e/ou período de uma Solicitação");
             printf("\n0- sair");
             printf("\n\n------------------------------------------------");
             printf("\nOpção escolhida: ");
             scanf("%d",&escolha);
             getchar();
 
-            if(escolha<1 || escolha >3)
+            if(escolha<0 || escolha >4)
                {
                     printf("\n--Escolha inválida--");
                     pause();
                }
-        }while(escolha<1 || escolha >3);
+        }while(escolha<0 || escolha >4);
 
 
         switch(escolha)
@@ -200,9 +242,9 @@ void menu(Lista *p)
                 pause();
                 consultaSolicitacao(p);
                 break;
-            default:
-                escolha = -1;
-                printf("\nEscolha inválida.");
+            case 4:
+                pause();
+                alteraPeriodOrPriori(p);
                 break;
         }
     }while(escolha != 0);
