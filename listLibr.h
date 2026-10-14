@@ -1,5 +1,6 @@
 #ifndef LISTLIBR_H_INCLUDED
 #define LISTLIBR_H_INCLUDED
+#include<locale.h>
 
 // STRUCT'S
 typedef struct no
@@ -70,6 +71,14 @@ int confereTam(No* antigo)
     }
     return cont;
 }
+No *insereListaCrescente(No *antigo, No *novo)
+{
+    aux = antigo;
+    if(novo ->Priori < aux -> Priori)
+    {
+
+    }
+}
 No *auxInsere(No *antigo,No *novo)
 {
     No *aux = NULL,*aux2 = antigo;
@@ -129,7 +138,19 @@ int VerCod(Lista *p, char n[])
     }
     return 0;
 }
+No* copiaNo(No *antigo)
+{
+    No *novo = (No*)malloc(sizeof(No));
 
+    strcpy(novo -> CodSol, antigo -> CodSol);
+    strcpy(novo -> CodEqu, antigo -> CodEqu);
+    strcpy(novo -> NomEqu, antigo -> NomEqu);
+    novo -> Priori = antigo -> Priori;
+    novo -> Period = antigo -> Period;
+    novo -> prox = NULL;
+
+    return novo;
+}
 //Inserir infos
 void insereCodSol(Lista *p, No *novo)
 {
@@ -440,25 +461,5 @@ void editaInfo(Lista *p,No *novo)
         }
     }while(verifica == 0);
 }
-void listaCrescente(Lista *p, Lista *pAux)
-{
-    No *aux = p -> inicio;
-    No *aux2 = pAux -> inicio;
 
-    No *novo = (No*)malloc(sizeof(No));
-
-    strcpy(novo -> CodSol, aux -> CodSol);
-    strcpy(novo -> CodEqu, aux -> CodEqu);
-    strcpy(novo -> NomEqu, aux -> NomEqu);
-    novo -> Priori = aux -> Priori;
-    novo -> Period = aux -> Period;
-    novo -> prox = NULL;
-
-    insereLista(pAux,novo);
-    aux = aux -> prox;
-    while(aux != NULL)
-    {
-        insereListaCrescente()
-    }
-}
 #endif // LISTLIBR_H_INCLUDED

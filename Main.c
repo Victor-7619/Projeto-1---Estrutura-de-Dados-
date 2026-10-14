@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include<locale.h>
 #include"listLibr.h"
 
 void InserirNovaSolicitacao(Lista *p)
@@ -201,11 +200,22 @@ void ExibirListaOrdemPriori(Lista *p)
 {
     Lista *pAux = criaLista();
 
-    listaCrescente(p,pAux);
+    No *aux = p -> inicio;
 
+    insereLista(pAux,copiaNo(aux));
+
+    aux = aux -> prox;
+
+    while(aux != NULL)
+    {
+        pAux -> inicio = insereListaCrescente(pAux -> inicio, copiaNo(aux));
+        aux = aux ->prox;
+    }
 }
 void menu(Lista *p)
 {
+    setlocale(LC_ALL, "Portuguese");
+
     int escolha = -1;
     do
     {
