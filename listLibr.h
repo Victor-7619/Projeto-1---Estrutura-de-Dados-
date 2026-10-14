@@ -81,7 +81,7 @@ No *auxInsere(No *antigo,No *novo)
     }
     if(aux == NULL)
     {
-        novo->prox =aux2;
+        novo->prox = aux2;
         return novo;
     }
     aux->prox = novo;
@@ -323,6 +323,59 @@ int imprimeSolicita(Lista *p)
     }
     return 1;
 }
+int editaLista(Lista *p, char entrada[])
+{
+    int escolha;
+    No *aux = p->inicio;
+
+    while(aux != NULL && strcmp(aux->CodSol,entrada) != 0)
+    {
+        aux = aux->prox;
+    }
+
+    if(aux == NULL)
+    {
+        return 0;
+    }
+    while(1 == 1)
+    {
+        do
+        {
+            printf("\n------------Qual deseja alterar?------------");
+            printf("\n\n1- Prioridade");
+            printf("\n2- Periodo");
+            printf("\n0- Sair");
+            printf("\n\n------------------------------------------");
+            printf("\nOpção escolhida: ");
+            scanf("%d",&escolha);
+            getchar();
+
+            if(escolha<0 || escolha >2)
+            {
+                printf("\n--Escolha inválida--");
+                pause();
+            }
+        }while(escolha<0 || escolha >2);
+
+        switch(escolha)
+        {
+            case 1:
+                inserePriori(p,aux);
+                printf("\nPrioridade editada.");
+                pause();
+                break;
+            case 2:
+                inserePeriod(p,aux);
+                printf("\nPeriodo de manutenção editado.");
+                pause();
+                break;
+            case 0:
+                pause();
+                return 1;
+                break;
+        }
+    }
+}
 void editaInfo(Lista *p,No *novo)
 {
     int escolha, verifica = 0;
@@ -387,187 +440,25 @@ void editaInfo(Lista *p,No *novo)
         }
     }while(verifica == 0);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*No* auxInsere(No* antigo, int valor)
+void listaCrescente(Lista *p, Lista *pAux)
 {
-    No *novo;
-    novo = (No*)malloc(sizeof(No));
-    novo->info = valor;
-    novo->prox = antigo;
-    return novo;
-}
-No* auxRemove(No* antigo)
-{
-    if(antigo->prox == NULL)
-    {
-        free(antigo);
-        return NULL;
-    }
-    No *novo = antigo->prox;
-    free(antigo);
-    return novo;
-}
-No* auxInserePos(No *antigo, int valor, int pos)
-{
-    No *aux = NULL,*aux2 = antigo,*novo;
+    No *aux = p -> inicio;
+    No *aux2 = pAux -> inicio;
 
-    novo = (No*)malloc(sizeof(No));
-    novo->info=valor;
-    novo->prox=NULL;
+    No *novo = (No*)malloc(sizeof(No));
 
-    for(int cont=1;aux2!=NULL&&cont<pos;cont++)
-    {
-        aux=aux2;
-        aux2=aux2->prox;
-    }
-    if(aux==NULL)
-    {
-        novo->prox=aux2;
-        return novo;
-    }
-    aux->prox=novo;
-    novo->prox=aux2;
-    return antigo;
-}
-No* auxApagaPos(No *antigo,int pos,int *valor)
-{
-    No *aux=NULL,*aux2=antigo;
-    int cont;
+    strcpy(novo -> CodSol, aux -> CodSol);
+    strcpy(novo -> CodEqu, aux -> CodEqu);
+    strcpy(novo -> NomEqu, aux -> NomEqu);
+    novo -> Priori = aux -> Priori;
+    novo -> Period = aux -> Period;
+    novo -> prox = NULL;
 
-    for(cont=1;aux2!=NULL&&cont<pos;cont++)
+    insereLista(pAux,novo);
+    aux = aux -> prox;
+    while(aux != NULL)
     {
-        aux=aux2;
-        aux2=aux2->prox;
-    }
-
-    if(aux2==NULL)
-    {
-        printf("Posicao inexistente!");
-        return antigo;
-    }
-    if(aux==NULL)
-    {
-        aux=aux2->prox;
-        *valor = aux2->info;
-        free(aux2);
-        return aux;
-    }
-    aux->prox=aux2->prox;
-    *valor = aux2->info;
-    free(aux2);
-    return antigo;
-}*/
-/*void insereInicioLista(Lista* velho, int valor)
-{
-    velho->inicio = auxInsere(velho->inicio,valor);
-}
-void insereQualquerPos(Lista *velho, int pos, int valor)
-{
-    velho->inicio = auxInserePos(velho->inicio,valor,pos);
-}
-void insereFimLista(Lista *velho, int valor)
-{
-    No *aux = velho->inicio;
-
-    if(vaziaLista(velho))
-    {
-        insereInicioLista(velho,valor);
-    }
-    else
-    {
-        while(aux->prox!=NULL)
-        {
-            aux = aux->prox;
-        }
-        aux->prox = auxInsere(aux->prox,valor);
+        insereListaCrescente()
     }
 }
-int apagaInicioLista(Lista *velho)
-{
-    int valor = 0;
-
-    if(vaziaLista(velho))
-    {
-        printf("Lista vazia!");
-        exit(0);
-    }
-    else
-    {
-        valor = velho->inicio->info;
-        velho->inicio = auxRemove(velho->inicio);
-        return valor;
-    }
-}
-int apagaFimLista(Lista *velho)
-{
-    No *aux = NULL,*aux2 = velho->inicio;
-    int valor;
-
-    if(vaziaLista(velho))
-    {
-        printf("Lista vazia!");
-        exit(0);
-    }
-    while(aux2->prox!=NULL)
-    {
-        aux = aux2;
-        aux2 = aux2->prox;
-    }
-    if(aux == NULL)
-    {
-        valor = velho->inicio->info;
-        velho->inicio = auxRemove(aux2);
-        return valor;
-    }
-    valor = aux2->info;
-    aux->prox = auxRemove(aux2);
-    return valor;
-}
-int apagaQualquerPosLista(Lista *velho,int pos, int *valor)
-{
-    if(pos<1 || confereTam(velho->inicio)<pos)
-    {
-        printf("\nPosição inexistente!");
-        return 0;
-    }
-    if(!vaziaLista(velho))
-    {
-        velho->inicio=auxApagaPos(velho->inicio,pos,valor);
-        return 1;
-    }
-    printf("lista Vazia!");
-    return 0;
-}
-*/
-
 #endif // LISTLIBR_H_INCLUDED

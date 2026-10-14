@@ -88,7 +88,6 @@ void RemoverSolicitacao(Lista *p)
 
             if (strcmp(entrada, "1") == 0)
             {
-                printf("\nRetornando ao menu.");
                 verifica = 1;
             }
             else
@@ -133,7 +132,6 @@ void consultaSolicitacao(Lista *p)
 
             if (strcmp(entrada, "1") == 0)
             {
-                printf("\nRetornando ao menu.");
                 verifica = 1;
             }
             else
@@ -160,44 +158,51 @@ void consultaSolicitacao(Lista *p)
 }
 void alteraPeriodOrPriori(Lista *p)
 {
-    int escolha = -1;
+    int verifica = 0;
+    char entrada[6];
     do
     {
-
-        do
+        if(!imprimeSolicita(p))
         {
-            printf("\n------------Qual deseja alterar?------------");
-            printf("\n\n1- Prioridade");
-            printf("\n2- Periodo");
-            printf("\n0- Sair");
-            printf("\n\n------------------------------------------");
-            printf("\nOpção escolhida: ");
-            scanf("%d",&escolha);
-            getchar();
-            if(escolha<0 || escolha >2)
-            {
-                printf("\n--Escolha inválida--");
-                pause();
-            }
-        }while(escolha<0 || escolha >2);
-
-        switch(escolha)
-        {
-            case 1:
-                inserePriori(p,novo);
-                printf("\nPrioridade editada.");
-                pause();
-                break;
-            case 2:
-                inserePeriod(p,novo);
-                printf("\nPeriodo de manutenção editado.");
-                pause();
-                break;
-            case 0:
-                pause();
-                break;
+            verifica = 1;
         }
-    }while(escolha != 0);
+        else
+        {
+            printf("\n\nDigite o código da solicitação a ser editado (1 para retornar ao menu): ");
+            fgets(entrada,sizeof(entrada),stdin);
+            entrada[strcspn(entrada, "\n")] = '\0';
+
+            if (strcmp(entrada, "1") == 0)
+            {
+                verifica = 1;
+            }
+            else
+            {
+               if(strlen(entrada) == 4)
+                {
+                    if(editaLista(p,entrada))
+                    {
+                        verifica = 1;
+                    }
+                    else
+                    {
+                        printf("codigo de solicitação inválido ou inexistente.");
+                    }
+                }
+                else
+                {
+                    printf("codigo de solicitação inválido ou inexistente.");
+                }
+            }
+        }
+    }while(verifica == 0);
+}
+void ExibirListaOrdemPriori(Lista *p)
+{
+    Lista *pAux = criaLista();
+
+    listaCrescente(p,pAux);
+
 }
 void menu(Lista *p)
 {
@@ -224,27 +229,35 @@ void menu(Lista *p)
                }
         }while(escolha<0 || escolha >4);
 
-
         switch(escolha)
         {
             case 0:
                 printf("Encerrando programa.");
                 break;
+
             case 1:
                 pause();
                 InserirNovaSolicitacao(p);
                 break;
+
             case 2:
                 pause();
                 RemoverSolicitacao(p);
                 break;
+
             case 3:
                 pause();
                 consultaSolicitacao(p);
                 break;
+
             case 4:
                 pause();
                 alteraPeriodOrPriori(p);
+                break;
+
+            case 5:
+                pause();
+                ExibirListaOrdemPriori(p);
                 break;
         }
     }while(escolha != 0);
