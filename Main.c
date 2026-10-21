@@ -208,7 +208,7 @@ void ExibirListaOrdemPriori(Lista *p)
 
     while(aux != NULL)
     {
-        pAux -> inicio = insereListaCrescente(pAux -> inicio, copiaNo(aux));
+        pAux -> inicio = insereListaCrescente(pAux, copiaNo(aux));
         aux = aux ->prox;
     }
 }
@@ -221,13 +221,13 @@ void menu(Lista *p)
     {
         do
         {
-            printf("----Gerenciador de Manutenção de Equipamentos----");
-            printf("\n\n1- Insira uma nova solicitação");
-            printf("\n2- Remova uma solicitação");
-            printf("\n3- Consulte uma solicitação");
-            printf(" \n4- Altere a prioridade e/ou período de uma Solicitação");
-            printf("\n0- sair");
-            printf("\n\n------------------------------------------------");
+            printf("-------Gerenciador de Manutenção de Equipamentos-------");
+            printf("\n\n1 - Insira uma nova solicitação");
+            printf("\n2 - Remova uma solicitação");
+            printf("\n3 - Consulte uma solicitação");
+            printf(" \n4 - Altere a prioridade e/ou período de uma Solicitação");
+            printf("\n0 - sair");
+            printf("\n\n---------------------------------------------------------");
             printf("\nOpção escolhida: ");
             scanf("%d",&escolha);
             getchar();
@@ -265,10 +265,10 @@ void menu(Lista *p)
                 alteraPeriodOrPriori(p);
                 break;
 
-            case 5:
+            /*case 5:
                 pause();
                 ExibirListaOrdemPriori(p);
-                break;
+                break;*/
         }
     }while(escolha != 0);
 

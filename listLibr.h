@@ -71,13 +71,61 @@ int confereTam(No* antigo)
     }
     return cont;
 }
-No *insereListaCrescente(No *antigo, No *novo)
+No *insereListaCrescente(Lista *p, No *novo)
 {
-    aux = antigo;
-    if(novo ->Priori < aux -> Priori)
-    {
+    No *aux = NULL;
+    No *aux2 = p->inicio;
+    No *antigo = p->inicio;
 
+
+    if(novo -> Priori < aux -> Priori)
+    {
+        novo-> prox = antigo;
+        return novo;
     }
+    if(novo -> Priori == aux -> Priori && novo -> Period == aux -> Period)
+    {
+        if(novo -> CodSol < aux -> CodSol)
+        {
+            novo-> prox = antigo;
+            return novo;
+        }
+        novo -> prox = aux -> prox;
+        aux -> prox = novo;
+        return antigo;
+    }
+    aux = aux2;
+    aux2 = aux2 -> prox;
+
+    while(aux2 -> prox != NULL)
+    {
+        if(novo -> Priori > aux -> Priori)
+        {
+            aux = aux -> prox;
+        }
+        else
+        {
+            if(novo -> Period == aux -> Period)
+            {
+                 if(novo -> CodSol > aux -> CodSol)
+                 {
+                    novo -> prox = aux -> prox;
+                    aux -> prox = novo;
+                    return antigo;
+                 }
+                 aux -> prox = novo;
+                 novo -> prox = aux2;
+                 return antigo;
+            }
+            if(novo -> Period < aux -> Period)
+            {
+                novo -> prox = aux -> prox;
+                aux -> prox = novo;
+                return antigo;
+            }
+        }
+    }
+
 }
 No *auxInsere(No *antigo,No *novo)
 {
@@ -461,5 +509,11 @@ void editaInfo(Lista *p,No *novo)
         }
     }while(verifica == 0);
 }
+
+
+
+
+
+
 
 #endif // LISTLIBR_H_INCLUDED
