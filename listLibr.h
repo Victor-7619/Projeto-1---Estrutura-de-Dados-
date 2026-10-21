@@ -5,7 +5,7 @@
 // STRUCT'S
 typedef struct no
 {
-        char CodSol[100];
+        int CodSol;
         char CodEqu[7];
         char NomEqu[21];
         int Priori;
@@ -19,6 +19,13 @@ typedef struct lista
 
 
 // INICIALIZAÇAO/LIBERAÇAO DE LISTA
+
+void limpar_buffer()
+{
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
+}
+
 Lista* inicializaLista()
 {
     return NULL;
@@ -78,30 +85,31 @@ No *insereListaCrescente(Lista *p, No *novo)
     No *antigo = p->inicio;
 
 
-    if(novo -> Priori < aux -> Priori)
+    if(novo -> Priori < aux2 -> Priori)
     {
         novo-> prox = antigo;
         return novo;
     }
-    if(novo -> Priori == aux -> Priori && novo -> Period == aux -> Period)
+    if(novo -> Priori == aux2 -> Priori && novo -> Period == aux2 -> Period)
     {
-        if(novo -> CodSol < aux -> CodSol)
+        if(novo -> CodSol < aux2 -> CodSol) // Ver string de CodSol
         {
             novo-> prox = antigo;
             return novo;
         }
-        novo -> prox = aux -> prox;
-        aux -> prox = novo;
+        novo -> prox = aux2 -> prox;
+        aux2 -> prox = novo;
         return antigo;
     }
     aux = aux2;
-    aux2 = aux2 -> prox;
+    aux2 = aux -> prox;
 
     while(aux2 -> prox != NULL)
     {
         if(novo -> Priori > aux -> Priori)
         {
-            aux = aux -> prox;
+            aux = aux2;
+            aux2 = aux2 -> prox;
         }
         else
         {
@@ -123,32 +131,36 @@ No *insereListaCrescente(Lista *p, No *novo)
                 aux -> prox = novo;
                 return antigo;
             }
+            novo -> prox = aux2 -> prox;
+            aux2 ->prox = novo;
+            return antigo;
         }
     }
-
+    aux2 -> prox = novo;
+    return antigo;
 }
 No *auxInsere(No *antigo,No *novo)
 {
     No *aux = NULL,*aux2 = antigo;
 
-    while(aux2!=NULL && aux2->CodSol<novo->CodSol)
+    while(aux2 != NULL && aux2 -> CodSol < novo -> CodSol)
     {
         aux = aux2;
         aux2 = aux2->prox;
     }
     if(aux == NULL)
     {
-        novo->prox = aux2;
+        novo -> prox = aux2;
         return novo;
     }
-    aux->prox = novo;
-    novo->prox = aux2;
+    aux -> prox = novo;
+    novo -> prox = aux2;
     return antigo;
 }
-No *auxRemove(No *antigo, char entrada[],int *verifica)
+No *auxRemove(No *antigo, int entrada,int *verifica)
 {
     No *novo = NULL,*aux = antigo;
-    while(aux != NULL && strcmp(aux->CodSol,entrada) != 0)
+    while(aux != NULL && aux -> CodSol != entrada)
     {
         novo = aux;
         aux = aux -> prox;
@@ -162,7 +174,7 @@ No *auxRemove(No *antigo, char entrada[],int *verifica)
     }
     if(aux != NULL)
     {
-        if(strcmp(aux->CodSol,entrada) == 0)
+        if(aux -> CodSol == entrada)
            {
                novo -> prox = aux -> prox;
                free(aux);
@@ -172,13 +184,13 @@ No *auxRemove(No *antigo, char entrada[],int *verifica)
     }
     return antigo;
 }
-int VerCod(Lista *p, char n[])
+int VerCod(Lista *p, int n)
 {
     No *aux = p->inicio;
 
     while(aux != NULL)
     {
-        if( strcmp(aux->CodSol,n) == 0)
+        if(n == aux -> CodSol)
         {
             return 1;
         }
@@ -190,9 +202,9 @@ No* copiaNo(No *antigo)
 {
     No *novo = (No*)malloc(sizeof(No));
 
-    strcpy(novo -> CodSol, antigo -> CodSol);
     strcpy(novo -> CodEqu, antigo -> CodEqu);
     strcpy(novo -> NomEqu, antigo -> NomEqu);
+    novo -> CodSol = antigo -> CodSol;
     novo -> Priori = antigo -> Priori;
     novo -> Period = antigo -> Period;
     novo -> prox = NULL;
@@ -202,44 +214,42 @@ No* copiaNo(No *antigo)
 //Inserir infos
 void insereCodSol(Lista *p, No *novo)
 {
-    char entrada[100];
     do
     {
-        printf("\ncodigo de solicitação: ");
-        fgets(entrada,sizeof(entrada),stdin);
-        entrada[strcspn(entrada, "\n")] = '\0';
+        printf("\n\t\t\tcodigo de solicitação: ");
+        scanf("%d",&novo->CodSol);
+        limpar_buffer();
 
-        if(strlen(entrada) != 4)
+        if(novo -> CodSol < 1000 || novo -> CodSol > 9999)
         {
-            printf("\nDigite um código de 4 digitos.");
+            printf("\n\t\t\tDigite um código de 4 digitos.");
             pause();
         }
         else
         {
-            if(VerCod(p,entrada))
+            if(VerCod(p,novo -> CodSol))
             {
-                printf("\nCodigo de solicitação já cadastrado.");
+                printf("\n\t\t\tCodigo de solicitação já cadastrado.");
                 pause();
             }
         }
-    }while(VerCod(p,entrada) || strlen(entrada) != 4);
+    }while(novo -> CodSol < 1000 || novo -> CodSol > 9999);
 
-    strcpy(novo->CodSol, entrada);
 }
 void insereCodEqu(Lista *p, No *novo)
 {
     char entrada[100];
     do
     {
-        printf("\nDigite o Código do Equipamento: ");
+        printf("\n\t\t\tDigite o Código do Equipamento: ");
         fgets(entrada,sizeof(entrada),stdin);
 
-        if(strlen(entrada) > 7)
+        if(strlen(entrada) != 7)
         {
-            printf("\nDigite no maximo 6 caracteres!\n");
+            printf("\n\t\t\tDigite 6 caracteres!\n");
             pause();
         }
-    }while(strlen(entrada) > 7);
+    }while(strlen(entrada) != 7);
 
     entrada[strcspn(entrada, "\n")] = '\0';
     strcpy(novo->CodEqu, entrada);
@@ -249,12 +259,12 @@ void insereNomEqu(Lista *p,No *novo)
     char entrada[100];
     do
     {
-        printf("\nDigite o Nome do equipamento: ");
+        printf("\n\t\t\tDigite o Nome do equipamento: ");
         fgets(entrada,sizeof(entrada),stdin);
 
         if(strlen(entrada) > 21)
         {
-            printf("\nDigite no maximo 20 caracteres!\n");
+            printf("\n\t\t\tDigite no maximo 20 caracteres!\n");
             pause();
         }
     }while(strlen(entrada) > 21);
@@ -269,13 +279,13 @@ void inserePeriod(Lista *p,No *novo)
             case 1:
                 do
                 {
-                    printf("\nDigite o novo Periodo de prioridade 1 (1 a 7 dias): ");
+                    printf("\n\t\t\tDigite o novo Periodo de prioridade 1 (1 a 7 dias): ");
                     scanf("%d",&novo->Period);
-                    getchar();
+                    limpar_buffer();
 
                     if(novo -> Period < 1 || novo -> Period > 7)
                     {
-                        printf("\nPeriodo incorreto (1 a 7 dias).");
+                        printf("\n\t\t\tPeriodo incorreto (1 a 7 dias).");
                         pause();
                     }
                 }while(novo -> Period < 1 || novo -> Period > 7);
@@ -284,13 +294,13 @@ void inserePeriod(Lista *p,No *novo)
             case 2:
                 do
                 {
-                    printf("\nDigite o novo periodo de prioridade 2 (1 a 15 dias): ");
+                    printf("\n\t\t\tDigite o novo periodo de prioridade 2 (1 a 15 dias): ");
                     scanf("%d",&novo->Period);
-                    getchar();
+                    limpar_buffer();
 
                     if(novo -> Period < 1 || novo -> Period > 15)
                     {
-                        printf("\nPeriodo incorreto (1 a 15 dias).");
+                        printf("\n\t\t\tPeriodo incorreto (1 a 15 dias).");
                         pause();
                     }
                 }while(novo -> Period < 1 || novo -> Period > 15);
@@ -299,13 +309,13 @@ void inserePeriod(Lista *p,No *novo)
             case 3:
                 do
                 {
-                    printf("\nDigite o novo periodo de prioridade 3 (1 a 20 dias): ");
+                    printf("\n\t\t\tDigite o novo periodo de prioridade 3 (1 a 20 dias): ");
                     scanf("%d",&novo->Period);
-                    getchar();
+                    limpar_buffer();
 
                     if(novo -> Period < 1 || novo -> Period > 20)
                     {
-                        printf("\nPeriodo incorreto (1 a 20 dias).");
+                        printf("\n\t\t\tPeriodo incorreto (1 a 20 dias).");
                         pause();
                     }
                 }while(novo -> Period < 1 || novo -> Period > 20);
@@ -317,13 +327,13 @@ void inserePriori(Lista *p, No *novo)
     int valor;
     do
     {
-        printf("\nDigite a prioridade de manutenção: ");
+        printf("\n\t\t\tDigite a prioridade de manutenção: ");
         scanf("%d",&valor);
-        getchar();
+        limpar_buffer();
 
         if(valor < 1 || valor > 3)
         {
-            printf("\nPrioridade inexistente. Digite um valor entre 1 e 3.");
+            printf("\n\t\t\tPrioridade inexistente. Digite um valor entre 1 e 3.");
             pause();
         }
     }while(valor < 1 || valor > 3);
@@ -336,7 +346,7 @@ void inserePriori(Lista *p, No *novo)
     }
     else
     {
-        printf("\nPrioridade inserida é a mesma da prioridade cadastrada, retornando.");
+        printf("\n\t\t\tPrioridade inserida é a mesma da prioridade cadastrada, retornando.");
     }
 }
 
@@ -345,24 +355,24 @@ void insereLista(Lista *p, No *novo)
 {
     p->inicio = auxInsere(p->inicio,novo);
 }
-int removeLista(Lista *p, char entrada[])
+int removeLista(Lista *p, int entrada)
 {
     int verifica = 0;
     p->inicio = auxRemove(p->inicio,entrada,&verifica);
 
     return verifica;
 }
-int imprimeLista(Lista *p,char entrada[])
+int imprimeLista(Lista *p,int entrada)
 {
     No *aux = p->inicio;
 
-    while(aux!=NULL && strcmp(aux -> CodSol,entrada) != 0)
+    while(aux!=NULL && aux -> CodSol != entrada)
     {
         aux = aux -> prox;
     }
     if(aux != NULL)
     {
-        if(strcmp(aux -> CodSol,entrada) == 0)
+        if(aux -> CodSol == entrada)
         {
             printf("----------solicitação----------\n\n");
             printf("Código da solicitação: %s\n", aux->CodSol);
@@ -382,22 +392,22 @@ int imprimeSolicita(Lista *p)
     No *aux = p->inicio;
     if(aux == NULL)
     {
-        printf("\nNenhuma solicitação em aberto.");
+        printf("\n\t\t\tNenhuma solicitação em aberto.");
         return 0;
     }
-    printf("\nSolicitações em aberto: ");
+    printf("\n\t\t\tSolicitações em aberto: ");
     for(int i = 1; aux != NULL; i++, aux = aux->prox)
     {
         printf("\n%d - %s",i,aux->CodSol);
     }
     return 1;
 }
-int editaLista(Lista *p, char entrada[])
+int editaLista(Lista *p, int entrada)
 {
     int escolha;
     No *aux = p->inicio;
 
-    while(aux != NULL && strcmp(aux->CodSol,entrada) != 0)
+    while(aux != NULL && aux->CodSol != entrada)
     {
         aux = aux->prox;
     }
@@ -417,11 +427,11 @@ int editaLista(Lista *p, char entrada[])
             printf("\n\n------------------------------------------");
             printf("\nOpção escolhida: ");
             scanf("%d",&escolha);
-            getchar();
+            limpar_buffer();
 
             if(escolha<0 || escolha >2)
             {
-                printf("\n--Escolha inválida--");
+                printf("\n\t\t\t--Escolha inválida--");
                 pause();
             }
         }while(escolha<0 || escolha >2);
@@ -430,12 +440,12 @@ int editaLista(Lista *p, char entrada[])
         {
             case 1:
                 inserePriori(p,aux);
-                printf("\nPrioridade editada.");
+                printf("\n\t\t\tPrioridade editada.");
                 pause();
                 break;
             case 2:
                 inserePeriod(p,aux);
-                printf("\nPeriodo de manutenção editado.");
+                printf("\n\t\t\tPeriodo de manutenção editado.");
                 pause();
                 break;
             case 0:
@@ -461,7 +471,7 @@ void editaInfo(Lista *p,No *novo)
             printf("\n0- Retornar");
             printf("\n\nResposta: ");
             scanf("%d",&escolha);
-            getchar();
+            limpar_buffer();
 
             if(escolha<0 && escolha>5)
             {
@@ -475,31 +485,31 @@ void editaInfo(Lista *p,No *novo)
         {
             case 1:
                 insereCodSol(p,novo);
-                printf("\nCodigo de solicitação editado.");
+                printf("\n\t\t\tCodigo de solicitação editado.");
                 pause();
                 break;
 
             case 2:
                 insereCodEqu(p,novo);
-                printf("\nCódigo de equipamento editado.");
+                printf("\n\t\t\tCódigo de equipamento editado.");
                 pause();
                 break;
 
             case 3:
                 insereNomEqu(p,novo);
-                printf("\nNome do equipamento editado.");
+                printf("\n\t\t\tNome do equipamento editado.");
                 pause();
                 break;
 
             case 4:
                 inserePriori(p,novo);
-                printf("\nPrioridade editada.");
+                printf("\n\t\t\tPrioridade editada.");
                 pause();
                 break;
 
             case 5:
                 inserePeriod(p,novo);
-                printf("\nPeriodo de manutenção editado.");
+                printf("\n\t\t\tPeriodo de manutenção editado.");
                 pause();
                 break;
 

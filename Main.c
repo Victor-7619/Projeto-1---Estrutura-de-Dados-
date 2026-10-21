@@ -21,24 +21,27 @@ void InserirNovaSolicitacao(Lista *p)
         int escolha = -1;
         do
         {
-            printf("-------Nova solicitação-------\n\n");
-            printf("Código da solicitação: %s\n", novo->CodSol);
-            printf("Código do equipamento:   %s\n", novo->CodEqu);
-            printf("Nome do equipamento:      %s\n", novo->NomEqu);
-            printf("Prioridade:               %d\n", novo->Priori);
-            printf("Periodo de manutenção:  %d dia(s)\n\n", novo->Period);
-            printf("-------------------------------");
-            printf("\n\n--Menu--");
-            printf("\n1- Inserir solicitação");
-            printf("\n2- Editar solicitação");
-            printf("\n3- Excluir solicitação");
-            printf("\n\nResposta: ");
+            printf("\t\t\t------------------------------------------");
+            printf("\n\t\t\t|           Nova Solicitação           |");
+            printf("\n\t\t\t------------------------------------------");
+            printf("\n\t\t\t Código da solicitação: %d\n", novo->CodSol);
+            printf("\n\t\t\t Código do equipamento:   %s\n", novo->CodEqu);
+            printf("\n\t\t\t Nome do equipamento:      %s\n", novo->NomEqu);
+            printf("\n\t\t\t Prioridade:               %d\n", novo->Priori);
+            printf("\n\t\t\t Periodo de manutenção:  %d dia(s)\n\n", novo->Period);
+            printf("\t\t\t------------------------------------------");
+            printf("\n\t\t\t            |      Menu      |");
+            printf("\n\t\t\t            ------------------\n");
+            printf("\n\t\t\t\t [1] Inserir solicitação");
+            printf("\n\t\t\t\t [2] Editar solicitação");
+            printf("\n\t\t\t\t [3] Excluir solicitação");
+            printf("\n\n\t\t\t Resposta: ");
             scanf("%d",&escolha);
-            getchar();
+            limpar_buffer();
 
             if(escolha<1 || escolha >3)
                {
-                    printf("\n--Escolha inválida--");
+                    printf("\n\t\t\t--Escolha inválida--");
                     pause();
                }
         }while(escolha<1 || escolha >3);
@@ -47,7 +50,7 @@ void InserirNovaSolicitacao(Lista *p)
         {
         case 1:
             insereLista(p,novo);
-            printf("\nSolicitação cadastrada com sucesso.");
+            printf("\n\t\t\tSolicitação cadastrada com sucesso.");
             pause();
             verifica = 0;
             break;
@@ -60,7 +63,7 @@ void InserirNovaSolicitacao(Lista *p)
 
         case 3:
             free(novo);
-            printf("\nsolicitação cancelada.");
+            printf("\n\t\t\tsolicitação cancelada.");
             pause();
             verifica = 0;
             break;
@@ -71,7 +74,7 @@ void InserirNovaSolicitacao(Lista *p)
 void RemoverSolicitacao(Lista *p)
 {
     int verifica = 0;
-    char entrada[6];
+    int entrada;
 
     do
     {
@@ -81,31 +84,30 @@ void RemoverSolicitacao(Lista *p)
         }
         else
         {
-            printf("\n\nDigite o código da solicitação a ser encerrada (1 para retornar ao menu): ");
-            fgets(entrada,sizeof(entrada),stdin);
-            entrada[strcspn(entrada, "\n")] = '\0';
+            printf("\n\n\t\t\tDigite o código da solicitação a ser encerrada (1 para retornar ao menu): ");
+            scanf("%d",&entrada);
 
-            if (strcmp(entrada, "1") == 0)
+            if (entrada == 1)
             {
                 verifica = 1;
             }
             else
             {
-                if(strlen(entrada) == 4)
+                if(entrada >= 1000 && entrada <= 9999)
                 {
                     if(removeLista(p,entrada))
                     {
-                        printf("\nSolicitação encerrada com sucesso.");
+                        printf("\n\t\t\tSolicitação encerrada com sucesso.");
                         verifica = 1;
                     }
                     else
                     {
-                        printf("codigo de solicitação inválido ou inexistente.");
+                        printf("\t\t\tcodigo de solicitação inválido ou inexistente.");
                     }
                 }
                 else
                 {
-                    printf("codigo de solicitação inválido ou inexistente.");
+                    printf("\t\t\tcodigo de solicitação inválido ou inexistente.");
                 }
             }
         }
@@ -115,7 +117,7 @@ void RemoverSolicitacao(Lista *p)
 void consultaSolicitacao(Lista *p)
 {
     int verifica = 0;
-    char entrada[6];
+    int entrada;
 
     do
     {
@@ -125,17 +127,17 @@ void consultaSolicitacao(Lista *p)
         }
         else
         {
-            printf("\n\nDigite o código da solicitação a ser consultada (1 para retornar ao menu): ");
-            fgets(entrada,sizeof(entrada),stdin);
-            entrada[strcspn(entrada, "\n")] = '\0';
+            printf("\n\n\t\t\tDigite o código da solicitação a ser consultada (1 para retornar ao menu): ");
+            scanf("%d",&entrada);
+            limpar_buffer();
 
-            if (strcmp(entrada, "1") == 0)
+            if (entrada == 1)
             {
                 verifica = 1;
             }
             else
             {
-                if(strlen(entrada) == 4)
+                if(entrada >= 1000 && entrada <= 9999)
                 {
                     if(imprimeLista(p,entrada))
                     {
@@ -143,12 +145,12 @@ void consultaSolicitacao(Lista *p)
                     }
                     else
                     {
-                        printf("codigo de solicitação inválido ou inexistente.");
+                        printf("\t\t\tcodigo de solicitação inválido ou inexistente.");
                     }
                 }
                 else
                 {
-                    printf("codigo de solicitação inválido ou inexistente.");
+                    printf("\t\t\tcodigo de solicitação inválido ou inexistente.");
                 }
             }
         }
@@ -158,7 +160,7 @@ void consultaSolicitacao(Lista *p)
 void alteraPeriodOrPriori(Lista *p)
 {
     int verifica = 0;
-    char entrada[6];
+    int entrada;
     do
     {
         if(!imprimeSolicita(p))
@@ -167,17 +169,17 @@ void alteraPeriodOrPriori(Lista *p)
         }
         else
         {
-            printf("\n\nDigite o código da solicitação a ser editado (1 para retornar ao menu): ");
-            fgets(entrada,sizeof(entrada),stdin);
-            entrada[strcspn(entrada, "\n")] = '\0';
+            printf("\n\n\t\t\tDigite o código da solicitação a ser editado (1 para retornar ao menu): ");
+            scanf("%d",&entrada);
+            limpar_buffer();
 
-            if (strcmp(entrada, "1") == 0)
+            if (entrada == 1)
             {
                 verifica = 1;
             }
             else
             {
-               if(strlen(entrada) == 4)
+               if(entrada >= 1000 && entrada <= 9999)
                 {
                     if(editaLista(p,entrada))
                     {
@@ -185,16 +187,36 @@ void alteraPeriodOrPriori(Lista *p)
                     }
                     else
                     {
-                        printf("codigo de solicitação inválido ou inexistente.");
+                        printf("\t\t\tcodigo de solicitação inválido ou inexistente.");
                     }
                 }
                 else
                 {
-                    printf("codigo de solicitação inválido ou inexistente.");
+                    printf("\t\t\tcodigo de solicitação inválido ou inexistente.");
                 }
             }
         }
     }while(verifica == 0);
+}
+void ExibirSol(Lista *p)
+{
+    No *aux = p -> inicio;
+
+        printf("\t\t\t-------------------------------------------");
+        printf("\n\t\t\t|           Menu Solicitações           |");
+        printf("\n\t\t\t-------------------------------------------");
+
+    while(aux != NULL)
+    {
+        printf("\n\n    \t\t\t Código da solicitação: %d\n", aux->CodSol);
+        printf("\n\t\t\t Código do equipamento:   %s\n", aux->CodEqu);
+        printf("\n\t\t\t Nome do equipamento:      %s\n", aux->NomEqu);
+        printf("\n\t\t\t Prioridade:               %d\n", aux->Priori);
+        printf("\n\t\t\t Periodo de manutenção:  %d dia(s)\n\n", aux->Period);
+        printf("\t\t\t------------------------------------------\n\n\n");
+        aux = aux -> prox;
+    }
+    pause();
 }
 void ExibirListaOrdemPriori(Lista *p)
 {
@@ -211,7 +233,9 @@ void ExibirListaOrdemPriori(Lista *p)
         pAux -> inicio = insereListaCrescente(pAux, copiaNo(aux));
         aux = aux ->prox;
     }
+    ExibirSol(pAux);
 }
+
 void menu(Lista *p)
 {
     setlocale(LC_ALL, "Portuguese");
@@ -221,28 +245,31 @@ void menu(Lista *p)
     {
         do
         {
-            printf("-------Gerenciador de Manutenção de Equipamentos-------");
-            printf("\n\n1 - Insira uma nova solicitação");
-            printf("\n2 - Remova uma solicitação");
-            printf("\n3 - Consulte uma solicitação");
-            printf(" \n4 - Altere a prioridade e/ou período de uma Solicitação");
-            printf("\n0 - sair");
-            printf("\n\n---------------------------------------------------------");
-            printf("\nOpção escolhida: ");
+            printf("\t\t\t---------------------------------------------------------");
+            printf("\n\t\t\t|      Gerenciador de Manutenção de Equipamentos      |");
+            printf("\n\t\t\t---------------------------------------------------------");
+            printf("\n\n\t\t\t [1] Insira uma nova solicitação");
+            printf("\n\t\t\t [2] Remova uma solicitação");
+            printf("\n\t\t\t [3] Consulte uma solicitação");
+            printf("\n\t\t\t [4] Altere a prioridade e/ou período de uma Solicitação");
+            printf("\n\t\t\t [5] Exibir solicitações");
+            printf("\n\t\t\t [0] sair");
+            printf("\n\n\t\t\t---------------------------------------------------------");
+            printf("\n\t\t\t Opção escolhida: ");
             scanf("%d",&escolha);
-            getchar();
+            limpar_buffer();
 
-            if(escolha<0 || escolha >4)
+            if(escolha<0 || escolha >5)
                {
-                    printf("\n--Escolha inválida--");
+                    printf("\n\t\t\t--Escolha inválida--");
                     pause();
                }
-        }while(escolha<0 || escolha >4);
+        }while(escolha<0 || escolha >5);
 
         switch(escolha)
         {
             case 0:
-                printf("Encerrando programa.");
+                printf("\t\t\tEncerrando programa.");
                 break;
 
             case 1:
@@ -265,10 +292,10 @@ void menu(Lista *p)
                 alteraPeriodOrPriori(p);
                 break;
 
-            /*case 5:
+            case 5:
                 pause();
                 ExibirListaOrdemPriori(p);
-                break;*/
+                break;
         }
     }while(escolha != 0);
 
