@@ -1,7 +1,9 @@
 #ifndef LISTLIBR_H_INCLUDED
 #define LISTLIBR_H_INCLUDED
-#include<locale.h>
-
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<windows.h>
 // STRUCT'S
 typedef struct no
 {
@@ -25,7 +27,6 @@ void limpar_buffer()
     int c;
     while((c = getchar()) != '\n' && c != EOF);
 }
-
 Lista* inicializaLista()
 {
     return NULL;
@@ -211,17 +212,21 @@ No* copiaNo(No *antigo)
 
     return novo;
 }
+
 //Inserir infos
 void insereCodSol(Lista *p, No *novo)
 {
+    int verifica;
     do
     {
+        verifica = 0;
         printf("\n\t\t\tcodigo de solicitação: ");
         scanf("%d",&novo->CodSol);
         limpar_buffer();
 
         if(novo -> CodSol < 1000 || novo -> CodSol > 9999)
         {
+            verifica = 1;
             printf("\n\t\t\tDigite um código de 4 digitos.");
             pause();
         }
@@ -229,11 +234,12 @@ void insereCodSol(Lista *p, No *novo)
         {
             if(VerCod(p,novo -> CodSol))
             {
+                verifica = 1;
                 printf("\n\t\t\tCodigo de solicitação já cadastrado.");
                 pause();
             }
         }
-    }while(novo -> CodSol < 1000 || novo -> CodSol > 9999);
+    }while(verifica == 1);
 
 }
 void insereCodEqu(Lista *p, No *novo)
@@ -375,7 +381,7 @@ int imprimeLista(Lista *p,int entrada)
         if(aux -> CodSol == entrada)
         {
             printf("----------solicitação----------\n\n");
-            printf("Código da solicitação: %s\n", aux->CodSol);
+            printf("Código da solicitação: %d\n", aux->CodSol);
             printf("Código do equipamento:   %s\n", aux->CodEqu);
             printf("Nome do equipamento:      %s\n", aux->NomEqu);
             printf("Prioridade:               %d\n", aux->Priori);
@@ -398,7 +404,7 @@ int imprimeSolicita(Lista *p)
     printf("\n\t\t\tSolicitações em aberto: ");
     for(int i = 1; aux != NULL; i++, aux = aux->prox)
     {
-        printf("\n%d - %s",i,aux->CodSol);
+        printf("\n%d - %d",i,aux->CodSol);
     }
     return 1;
 }

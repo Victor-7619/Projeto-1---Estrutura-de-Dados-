@@ -1,6 +1,3 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
 #include"listLibr.h"
 
 void InserirNovaSolicitacao(Lista *p)
@@ -118,7 +115,6 @@ void consultaSolicitacao(Lista *p)
 {
     int verifica = 0;
     int entrada;
-
     do
     {
         if(!imprimeSolicita(p))
@@ -235,11 +231,8 @@ void ExibirListaOrdemPriori(Lista *p)
     }
     ExibirSol(pAux);
 }
-
 void menu(Lista *p)
 {
-    setlocale(LC_ALL, "Portuguese");
-
     int escolha = -1;
     do
     {
@@ -300,9 +293,10 @@ void menu(Lista *p)
     }while(escolha != 0);
 
 }
+
 int main()
 {
-    setlocale(LC_ALL, "");
+    SetConsoleOutputCP(CP_UTF8);
     Lista *p = criaLista();
 
     menu(p);
