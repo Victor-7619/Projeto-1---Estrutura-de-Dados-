@@ -897,8 +897,9 @@ void ExibirListaOrdemPriori(Lista *p)
         }
 
         ExibirSol(pAux);
-        liberaLista(pAux);
+
     }
+    liberaLista(pAux);
 }
 
 #endif // LISTLIBR_H_INCLUDED
