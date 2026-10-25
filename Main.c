@@ -15,9 +15,10 @@ void InserirNovaSolicitacao(Lista *p)
     pause();
     do
     {
-        int escolha = -1;
+        int escolha;
         do
         {
+            escolha = -1;
             printf("\n");
             printf("  ╔══════════════════════════════════════════════════════╗\n");
             printf("  ║                                                      ║\n");
@@ -96,6 +97,8 @@ void RemoverSolicitacao(Lista *p)
             printf("  ╚══════════════════════════════════════════════════════╝\n");
             printf("\n  >> Código da solicitação: ");
             scanf("%d",&entrada);
+
+            limpar_buffer();
 
             if (entrada == 1)
             {
@@ -207,6 +210,7 @@ void alteraPeriodOrPriori(Lista *p)
             if (entrada == 1)
             {
                 verifica = 1;
+                pause();
             }
             else
             {
@@ -219,11 +223,13 @@ void alteraPeriodOrPriori(Lista *p)
                     else
                     {
                         printf("\n  [ERRO] Código de solicitação inválido ou inexistente.\n");
+                        pause();
                     }
                 }
                 else
                 {
                     printf("\n  [ERRO] Código de solicitação inválido ou inexistente.\n");
+                    pause();
                 }
             }
         }
@@ -286,16 +292,16 @@ void ExibirListaOrdemPriori(Lista *p)
         ExibirSol(pAux);
         liberaLista(pAux);
     }
-    pause();
 }
 
 void menu(Lista *p)
 {
-    int escolha = -1;
+    int escolha;
     do
     {
         do
         {
+            escolha = -1;
             printf("\n");
             printf("  ╔══════════════════════════════════════════════════════╗\n");
             printf("  ║                                                      ║\n");
